@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="uz-Cyrl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04401f">
+<meta property="og:title" content="GRINBOOK">
+<meta property="og:description" content="Telegram гуруҳингиздаги ҳисобчи: овозли хабардан чек ёзади ва ҳар бир мижознинг қарзини юритади.">
+<meta property="og:image" content="assets/grinbook-icon-1024.png">
+<link rel="apple-touch-icon" href="assets/grinbook-icon-1024.png">
+<style>body{margin:0;font:14px/1.5 system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>GRINBOOK</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/png" href="assets/favicon-64.png">
+<meta name="description" content="ГРИНБУК — Telegram гуруҳингиздаги ҳисобчи. Боти ГРИН Овозли хабардан чек ёзади ва ҳар бир мижознинг қарзини юритади.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: three stacked screens on one vertical track. About sits above the main screen,
+   "What does GRIN do" and the demo sit below; moving between them pushes the main screen away.
+   "What does GRIN do" is a two-tab showcase: big headline, a laptop running Telegram, a dot pager. */
+:root {
+  --ink: #04140b;
+  --leaf: #3ddc5a;
+  --leaf-hi: #7cf592;
+  --emerald-0: #021f10;
+  --emerald-1: #04401f;
+  --emerald-2: #076a33;
+  --paper: #f2f8f3;
+  --mist: rgba(242, 248, 243, 0.76);
+  --faint: rgba(242, 248, 243, 0.5);
+  --line: rgba(190, 255, 210, 0.2);
+  --glass: rgba(220, 255, 230, 0.08);
+
+  --tg-bg: #0e1621;
+  --tg-side: #17212b;
+  --tg-head: #17212b;
+  --tg-in: #182533;
+  --tg-out: #2b5278;
+  --tg-active: #2b5278;
+  --tg-link: #6ab3f3;
+  --tg-meta: #6d7f8f;
+  --tg-btn: rgba(43, 82, 120, 0.6);
+  --tg-name: #67d16f;
+
+  --display: "Unbounded", "Manrope", system-ui, sans-serif;
+  --body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --tg-font: -apple-system, "SF Pro Text", Roboto, "Segoe UI", system-ui, sans-serif;
+  --ease: cubic-bezier(0.72, 0, 0.18, 1);
+  color-scheme: dark;
+}
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--emerald-0); color: var(--paper); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--leaf-hi); outline-offset: 3px; border-radius: 8px; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* ── The track ─────────────────────────────────────── */
+.app { position: fixed; inset: 0; overflow: hidden; overflow: clip; }
+.track { position: absolute; inset: 0; transition: transform 1s var(--ease); will-change: transform; }
+.view { position: absolute; left: 0; right: 0; height: 100%; overflow: hidden; overflow: clip; }
+.view[data-view="about"] { top: -100%; }
+.view[data-view="main"] { top: 0; }
+.view[data-view="how"] { top: 100%; }
+.view[data-view="demo"] { top: 200%; }
+.scroll { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; z-index: 1; }
+.scroll-inner { padding-block: calc(env(safe-area-inset-top, 0px) + 22px) calc(env(safe-area-inset-bottom, 0px) + 32px); }
+@media (prefers-reduced-motion: reduce) { .track { transition: none; } }
+
+/* ── Shining emerald ground ───────────────────────── */
+.shine { position: absolute; inset: 0; z-index: 0; overflow: hidden;
+  background:
+    radial-gradient(55% 45% at 12% 0%, rgba(150, 255, 190, 0.34), transparent 70%),
+    radial-gradient(45% 40% at 92% 18%, rgba(60, 230, 130, 0.28), transparent 70%),
+    radial-gradient(70% 55% at 50% 108%, rgba(20, 190, 95, 0.42), transparent 72%),
+    linear-gradient(162deg, var(--emerald-0) 0%, var(--emerald-1) 30%, var(--emerald-2) 55%, var(--emerald-1) 80%, var(--emerald-0) 100%);
+}
+.shine::before { content: ""; position: absolute; inset: -30%;
+  background: conic-gradient(from 205deg at 50% 0%, transparent 0deg, rgba(200, 255, 220, 0.16) 12deg, transparent 30deg, rgba(200, 255, 220, 0.1) 55deg, transparent 75deg, rgba(200, 255, 220, 0.14) 110deg, transparent 135deg, rgba(200, 255, 220, 0.08) 160deg, transparent 180deg);
+  filter: blur(22px); mix-blend-mode: screen; animation: beams 22s ease-in-out infinite alternate; }
+.shine::after { content: ""; position: absolute; inset: 0; opacity: 0.14; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
+.sparkle { position: absolute; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(closest-side, rgba(150, 255, 190, 0.22), transparent); filter: blur(10px); animation: drift 16s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes beams { from { transform: rotate(-7deg) translateX(-3%); } to { transform: rotate(7deg) translateX(3%); } }
+@keyframes drift { from { transform: translate(-40px, 20px) scale(0.95); } to { transform: translate(60px, -30px) scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .shine::before, .sparkle { animation: none; } }
+
+/* ── Main screen ──────────────────────────────────── */
+.main { display: grid; grid-template-rows: auto 1fr; isolation: isolate; }
+.photo { position: absolute; inset: -4%; z-index: -3; width: 108%; height: 108%; max-width: none; object-fit: cover; object-position: 50% 45%; animation: sway 26s ease-in-out infinite alternate; }
+@keyframes sway { 0% { transform: translate(-1.2%, 0.4%) scale(1) rotate(-0.25deg); } 50% { transform: translate(0.6%, -0.5%) scale(1.035) rotate(0.15deg); } 100% { transform: translate(1.4%, 0.3%) scale(1.02) rotate(0.3deg); } }
+.wind { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .photo { animation: none; } .wind { display: none; } }
+.main::before { content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(ellipse 34% 38% at 50% 46%, rgba(2, 18, 8, 0.32), transparent 72%),
+    linear-gradient(to bottom, rgba(2, 10, 5, 0.42) 0%, rgba(2, 10, 5, 0) 22%, rgba(2, 10, 5, 0) 52%, rgba(2, 14, 7, 0.72) 100%); }
+.nav { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; padding-block: calc(env(safe-area-inset-top, 0px) + 18px) 0; position: relative; z-index: 3; }
+.about-link { background: none; border: 0; padding: 8px 2px; font-weight: 800; font-size: 16px; letter-spacing: 0.01em; cursor: pointer; text-decoration: none; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.75); }
+.about-link { justify-self: end; }
+.about-link:hover { color: var(--leaf-hi); }
+.wordmark, .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: clamp(17px, 2vw, 22px); letter-spacing: 0.06em; text-decoration: none; text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6); white-space: nowrap; }
+.wordmark img, .brand img { width: 1.6em; height: 1.6em; max-width: none; flex: none; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.45)); }
+.wordmark span, .brand span { color: var(--leaf-hi); }
+.wordmark b, .brand b { font-weight: inherit; }
+.brand { font-size: 17px; }
+@media (max-width: 480px) { .wordmark b { display: none; } .wordmark img { width: 36px; height: 36px; } }
+.about-logo { display: block; width: 76px; height: 76px; max-width: none; margin-bottom: 18px; filter: drop-shadow(0 6px 24px rgba(61, 220, 90, 0.35)); }
+
+.lang { position: relative; }
+.lang-btn { display: inline-flex; align-items: center; gap: 8px; background: rgba(4, 18, 9, 0.45); border: 1px solid rgba(242, 248, 243, 0.28); border-radius: 999px; padding: 7px 13px 7px 11px; font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.lang-btn svg { width: 16px; height: 16px; }
+.lang-menu { position: absolute; top: calc(100% + 8px); left: 0; min-width: 170px; padding: 6px; margin: 0; list-style: none; border-radius: 14px; background: rgba(6, 30, 16, 0.95); border: 1px solid var(--line); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45); }
+.lang-menu button { width: 100%; display: flex; justify-content: space-between; gap: 12px; background: none; border: 0; padding: 9px 12px; border-radius: 9px; text-align: left; cursor: pointer; font-weight: 600; font-size: 15px; }
+.lang-menu button:hover { background: rgba(190, 255, 210, 0.1); }
+.lang-menu button[aria-checked="true"]::after { content: "✓"; color: var(--leaf-hi); }
+
+.stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(14px, 2.4vh, 24px); padding-block: 8px calc(env(safe-area-inset-bottom, 0px) + 40px); text-align: center; min-height: 0; }
+.bot { position: relative; width: clamp(200px, 38vh, 420px); max-width: 74vw; }
+.bot img { display: block; width: 100%; height: auto; transform-origin: 50% 82%; animation: hover 6.4s ease-in-out infinite, breathe 4.3s ease-in-out infinite;
+  filter: drop-shadow(0 0 1.5px rgba(200, 255, 215, 0.9)) drop-shadow(0 0 20px rgba(61, 220, 90, 0.45)) drop-shadow(0 24px 30px rgba(0, 0, 0, 0.5)); }
+.bot::after { content: ""; position: absolute; left: 24%; right: 24%; bottom: -12px; height: 20px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.5), transparent); animation: shadow 6.4s ease-in-out infinite; }
+@keyframes hover { 0%, 100% { translate: 0 0; rotate: -0.6deg; } 50% { translate: 0 -6px; rotate: 0.6deg; } }
+@keyframes breathe { 0%, 100% { scale: 1; } 50% { scale: 1.012; } }
+@keyframes shadow { 0%, 100% { transform: scaleX(1); opacity: 0.9; } 50% { transform: scaleX(0.92); opacity: 0.7; } }
+@media (prefers-reduced-motion: reduce) { .bot img, .bot::after { animation: none; } }
+
+.tagline { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(21px, 3.3vw, 36px); line-height: 1.16; letter-spacing: -0.01em; text-wrap: balance; text-shadow: 0 2px 22px rgba(0, 0, 0, 0.7); max-width: 22ch; }
+.tagline em { font-style: normal; color: var(--leaf-hi); }
+.cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 24px; border-radius: 999px; font-weight: 800; font-size: 16px; text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease; }
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn-ghost { background: rgba(250, 252, 248, 0.16); border-color: rgba(250, 252, 248, 0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.btn-ghost:hover { background: rgba(250, 252, 248, 0.28); }
+.btn-solid { background: var(--leaf); color: var(--ink); box-shadow: 0 10px 34px rgba(61, 220, 90, 0.42); }
+.btn-solid:hover { background: var(--leaf-hi); }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+/* ── Shared text for the secondary screens ────────── */
+.topback { display: inline-flex; align-items: center; gap: 8px; color: var(--mist); text-decoration: none; font-weight: 700; font-size: 14px; padding: 6px 0; }
+.topback:hover { color: var(--paper); }
+.eyebrow { font-size: 13px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--leaf-hi); margin: 0 0 14px; }
+h2.title { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4.4vw, 50px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 18px; text-wrap: balance; text-shadow: 0 2px 30px rgba(0, 40, 15, 0.6); }
+.lede { color: var(--mist); max-width: 58ch; margin: 0; font-size: 17px; }
+
+/* ── Showcase ("What does GRIN do") ───────────────── */
+.showcase { min-height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; }
+.show-top { align-self: stretch; display: flex; justify-content: space-between; align-items: center; max-width: 1180px; width: 100%; margin: 0 auto; }
+.tabs { display: inline-flex; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.16); margin-top: 6px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); max-width: 100%; }
+.tab { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 10px 20px; border-radius: 999px; font-weight: 800; font-size: 16px; cursor: pointer; color: var(--mist); white-space: nowrap; transition: background 0.3s ease, color 0.3s ease; }
+.tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22); }
+.tab svg { width: 18px; height: 18px; flex: none; }
+.big { font-family: var(--display); font-weight: 800; font-size: clamp(40px, 7vw, 84px); line-height: 1; letter-spacing: -0.03em; margin: clamp(18px, 3.2vh, 34px) 0 12px; text-shadow: 0 4px 40px rgba(0, 60, 20, 0.55); }
+.big-sub { margin: 0 auto; max-width: 52ch; color: var(--mist); font-size: clamp(16px, 1.6vw, 20px); min-height: 3.1em; text-wrap: balance; }
+.fade { transition: opacity 0.35s ease, transform 0.35s ease; }
+.fade.out { opacity: 0; transform: translateY(8px); }
+
+.device-row { position: relative; width: 100%; max-width: 1180px; margin: clamp(14px, 2.5vh, 26px) auto 0; display: flex; justify-content: center; }
+.laptop { width: min(960px, 100%, calc((100svh - 360px) * 1.62)); min-width: min(560px, 100%); }
+.lid { border-radius: 22px 22px 8px 8px; padding: 12px 12px 14px; background: linear-gradient(160deg, #31373b, #0c0e0f); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 80px rgba(80, 255, 140, 0.22), inset 0 0 0 1.5px rgba(255, 255, 255, 0.1); }
+.base { height: 16px; margin: 0 -7%; border-radius: 0 0 22px 22px; background: linear-gradient(180deg, #d6dbde, #8b9296 70%, #5d6468); position: relative; box-shadow: 0 18px 30px rgba(0, 0, 0, 0.35); }
+.base::before { content: ""; position: absolute; left: 50%; top: 0; width: 16%; height: 6px; translate: -50% 0; border-radius: 0 0 10px 10px; background: rgba(0, 0, 0, 0.25); }
+
+.tgd { aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: minmax(0, 34%) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); background: var(--tg-bg); font-family: var(--tg-font); font-size: 13px; line-height: 1.36; color: #fff; text-align: left; position: relative; }
+.side { background: var(--tg-side); border-right: 1px solid #0b1118; display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; }
+.side-top { display: flex; align-items: center; gap: 8px; padding: 10px 10px 8px; }
+.dots3 { display: flex; gap: 6px; padding-right: 4px; }
+.dots3 i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+.search { flex: 1; min-width: 0; background: #242f3d; color: var(--tg-meta); border-radius: 999px; padding: 6px 12px; font-size: 12.5px; white-space: nowrap; overflow: hidden; }
+.chats { list-style: none; margin: 0; padding: 4px; display: grid; gap: 2px; }
+.chat-item { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 9px; align-items: center; padding: 7px 8px; border-radius: 10px; }
+.chat-item.active { background: var(--tg-active); }
+.ci-ava { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 16px; }
+.ci-name { font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ci-prev { color: #8fa3b5; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.active .ci-prev { color: #d6e6f7; }
+.ci-meta { display: grid; justify-items: end; gap: 3px; font-size: 11.5px; color: var(--tg-meta); }
+.active .ci-meta { color: #d6e6f7; }
+.badge { background: #3e546a; color: #fff; border-radius: 999px; min-width: 19px; height: 19px; padding: 0 5px; display: grid; place-items: center; font-size: 11px; font-weight: 600; }
+
+.pane { display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; position: relative; }
+.tg-head { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--tg-head); border-bottom: 1px solid #0b1118; }
+.tg-group { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 16px; background: linear-gradient(135deg, #ffb661, #f37b39); flex: none; }
+.tg-title { min-width: 0; flex: 1; }
+.tg-title b { display: block; font-size: 14px; font-weight: 600; }
+.tg-sub { font-size: 12px; color: var(--tg-meta); }
+.tg-sub.typing { color: var(--tg-link); }
+.tg-sub.typing::after { content: ""; display: inline-block; width: 1.2em; text-align: left; animation: dots 1.2s steps(4) infinite; }
+@keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+.head-icons { display: flex; gap: 14px; color: var(--tg-meta); }
+.head-icons svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.tg-chat { flex: 1; min-height: 0; overflow: hidden; padding: 12px 16px 10px; display: flex; flex-direction: column; justify-content: flex-end; gap: 7px; background-color: var(--tg-bg);
+  background-image: radial-gradient(circle at 20% 30%, rgba(106, 179, 243, 0.05) 0 2px, transparent 3px), radial-gradient(circle at 70% 80%, rgba(106, 179, 243, 0.04) 0 2px, transparent 3px), radial-gradient(circle at 45% 60%, rgba(103, 209, 111, 0.035) 0 1.5px, transparent 2.5px);
+  background-size: 46px 46px, 62px 62px, 38px 38px; }
+.day { align-self: center; font-size: 12px; padding: 3px 10px; border-radius: 12px; background: rgba(0, 0, 0, 0.32); color: #d7e3ee; flex: none; }
+.msg { display: flex; align-items: flex-end; gap: 7px; flex: none; transition: opacity 0.35s ease, transform 0.35s ease; }
+.msg.out { justify-content: flex-end; }
+.msg.enter { opacity: 0; transform: translateY(12px); }
+.ava { width: 30px; height: 30px; border-radius: 50%; background: #1f8f3a url("assets/grin-avatar.webp") center / 118% no-repeat; flex: none; }
+.col { display: flex; flex-direction: column; gap: 3px; max-width: min(78%, 380px); min-width: 0; }
+.bubble { padding: 6px 9px 6px 10px; border-radius: 14px; background: var(--tg-in); overflow-wrap: anywhere; }
+.out .bubble { background: var(--tg-out); border-bottom-right-radius: 5px; }
+.in .bubble { border-bottom-left-radius: 5px; }
+.who { color: var(--tg-name); font-weight: 600; font-size: 12.5px; margin-bottom: 1px; }
+.quote { border-left: 2.5px solid var(--tg-link); background: rgba(106, 179, 243, 0.1); border-radius: 4px; padding: 2px 7px; margin: 2px 0 5px; font-size: 12px; line-height: 1.3; }
+.quote b { display: block; color: var(--tg-link); font-weight: 600; }
+.quote span { color: #c6d3df; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bill { white-space: pre-line; font-variant-numeric: tabular-nums; }
+.meta { float: right; margin: 6px 0 -4px 10px; font-size: 11px; color: rgba(255, 255, 255, 0.5); display: inline-flex; gap: 3px; align-items: center; }
+.out .meta { color: #a3c5e6; }
+.kb { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; }
+.kb span { text-align: center; padding: 7px 4px; border-radius: 8px; background: var(--tg-btn); font-size: 12.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s ease, transform 0.2s ease; }
+.kb span.press { background: rgba(106, 179, 243, 0.75); transform: scale(0.95); }
+.voice { display: flex; align-items: center; gap: 9px; min-width: 200px; padding: 2px 0; }
+.play { width: 34px; height: 34px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+.play::before { content: ""; border-left: 11px solid var(--tg-out); border-top: 7px solid transparent; border-bottom: 7px solid transparent; margin-left: 3px; }
+.wave { display: flex; align-items: center; gap: 2px; height: 24px; }
+.wave i { display: block; width: 3px; border-radius: 2px; background: #7ea8d1; transition: background 0.1s linear; }
+.wave i.lit { background: #fff; }
+.vlen { font-size: 11.5px; color: #a3c5e6; }
+.toast { position: absolute; left: 50%; top: 44%; translate: -50% 0; padding: 8px 16px; border-radius: 10px; background: rgba(0, 0, 0, 0.82); font-size: 13px; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+.toast.show { opacity: 1; }
+.tg-input { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--tg-head); color: var(--tg-meta); font-size: 13.5px; }
+.tg-input .field { flex: 1; }
+.tg-input .rec { display: none; flex: 1; align-items: center; gap: 8px; color: #fff; font-variant-numeric: tabular-nums; }
+.tg-input .rec i { width: 10px; height: 10px; border-radius: 50%; background: #ff4d4d; animation: blink 1s ease-in-out infinite; }
+.tg-input .rec span { color: var(--tg-meta); }
+.tg-input .mic { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; transition: background 0.2s ease, transform 0.2s ease; }
+.tg-input.recording .field { display: none; }
+.tg-input.recording .rec { display: flex; }
+.tg-input.recording .mic { background: var(--tg-link); transform: scale(1.25); box-shadow: 0 0 0 6px rgba(106, 179, 243, 0.25); animation: ring 1.2s ease-out infinite; }
+.tg-input.recording .mic svg { stroke: #fff; }
+@keyframes blink { 50% { opacity: 0.25; } }
+@keyframes ring { from { box-shadow: 0 0 0 0 rgba(106, 179, 243, 0.45); } to { box-shadow: 0 0 0 14px rgba(106, 179, 243, 0); } }
+/* Thought cloud: what the speaker is saying, floating up from the mic like a thought. */
+.caption-live { position: absolute; right: 30px; bottom: 74px; max-width: min(78%, 330px); z-index: 4; pointer-events: none;
+  opacity: 0; transform: translateY(10px) scale(0.85); transform-origin: 85% 100%; transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+.caption-live.on { opacity: 1; transform: none; }
+.caption-live.away { opacity: 0; transform: translateY(-26px) scale(0.92); transition: opacity 0.6s ease, transform 0.8s ease; }
+.cloud { position: relative; background: #fff; color: #17212b; border-radius: 34px; padding: 14px 22px; font-size: 15px; font-weight: 700; line-height: 1.35; text-align: center; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35)); }
+.cloud .bump { position: absolute; background: #fff; border-radius: 50%; z-index: -1; }
+.cloud .b1 { width: 38px; height: 38px; left: 10%; top: -14px; }
+.cloud .b2 { width: 52px; height: 52px; left: 34%; top: -24px; }
+.cloud .b3 { width: 36px; height: 36px; left: 64%; top: -13px; }
+.cloud .b4 { width: 30px; height: 30px; right: -9px; top: 30%; }
+.cloud .b5 { width: 30px; height: 30px; left: -9px; top: 26%; }
+.trail { position: absolute; background: #fff; border-radius: 50%; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)); }
+.trail.t1 { width: 16px; height: 16px; right: 22px; bottom: -22px; }
+.trail.t2 { width: 9px; height: 9px; right: 10px; bottom: -38px; }
+.cloud .w { opacity: 0; transition: opacity 0.18s ease; }
+.cloud .w.on { opacity: 1; }
+.tg-input svg { width: 20px; height: 20px; stroke: var(--tg-meta); fill: none; stroke-width: 1.8; flex: none; }
+
+.pager { position: absolute; right: 0; top: 50%; translate: 0 -50%; display: grid; justify-items: center; gap: 14px; }
+.dots { display: grid; gap: 4px; padding: 12px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.16); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.dot { width: 22px; height: 22px; border: 0; background: none; padding: 0; display: grid; place-items: center; cursor: pointer; }
+.dot::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.55); transition: height 0.3s ease, background 0.3s ease; }
+.dot[aria-current="true"]::before { height: 22px; background: #fff; }
+.playbtn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.14); display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.playbtn svg { width: 16px; height: 16px; fill: currentColor; }
+.playbtn:hover, .dot:hover::before { background: rgba(255, 255, 255, 0.3); }
+
+.show-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: clamp(22px, 3.4vh, 34px); }
+
+/* ── About ────────────────────────────────────────── */
+.about-wrap { max-width: 720px; margin: 0 auto; }
+.about-wrap h2.title { margin-top: 18px; }
+.about-wrap p { color: var(--mist); margin: 0 0 18px; font-size: 17px; }
+.about-wrap h3 { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--leaf-hi); margin: 36px 0 12px; }
+.facts { margin: 0; display: grid; border-top: 1px solid var(--line); }
+.facts div { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 16px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.facts dt { color: var(--faint); font-size: 15px; font-weight: 600; }
+.facts dd { margin: 0; font-size: 16px; }
+.about-wrap b { color: var(--paper); }
+.close-row { display: flex; justify-content: center; padding-top: 34px; }
+
+/* ── Demo ─────────────────────────────────────────── */
+.demo-inner { min-height: 100%; display: grid; align-content: center; }
+.demo-card { max-width: 1000px; margin: 0 auto; border: 1px solid var(--line); border-radius: 30px; padding: clamp(24px, 5vw, 52px); display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px; align-items: center; background: var(--glass); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 0 80px rgba(80, 255, 140, 0.12); }
+.demo-steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; counter-reset: d; }
+.demo-steps li { counter-increment: d; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; color: var(--mist); }
+.demo-steps li::before { content: counter(d); width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: rgba(61, 220, 90, 0.16); color: var(--leaf-hi); font-family: var(--display); font-weight: 700; font-size: 14px; }
+.demo-steps b { color: var(--paper); }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.92em; background: rgba(242, 248, 243, 0.12); padding: 1px 6px; border-radius: 5px; color: var(--paper); }
+.handle { display: block; margin-top: 10px; color: var(--faint); font-size: 14px; }
+.demo-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+
+/* ── Narrow screens: the laptop becomes a phone ───── */
+@media (max-width: 860px) {
+  .demo-card { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  .facts div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .device-row { flex-direction: column; align-items: center; gap: 16px; }
+  .laptop { width: min(360px, 100%); min-width: 0; }
+  .lid { border-radius: 40px; padding: 9px; }
+  .base { display: none; }
+  .tgd { aspect-ratio: 9 / 16.5; grid-template-columns: minmax(0, 1fr); border-radius: 32px; font-size: 13.5px; }
+  .side { display: none; }
+  .pager { position: static; translate: none; grid-auto-flow: column; align-items: center; }
+  .dots { grid-auto-flow: column; padding: 8px 12px; }
+  .dot[aria-current="true"]::before { height: 6px; width: 22px; }
+  .tab { padding: 9px 14px; font-size: 14px; }
+}
+@media (max-width: 480px) {
+  .cta, .show-cta, .demo-actions { width: 100%; }
+  .cta .btn, .show-cta .btn, .demo-actions .btn { width: 100%; }
+  .cta { max-width: 360px; }
+  .tab svg { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="track" id="track">
+
+    <!-- ABOUT (above the main screen) -->
+    <section class="view" data-view="about" aria-labelledby="about-title">
+      <div class="shine" aria-hidden="true"><span class="sparkle" style="left:-120px;top:-80px"></span></div>
+      <div class="scroll"><div class="scroll-inner gutter">
+        <div class="about-wrap">
+          <img class="about-logo" src="assets/grinbook-logo.webp" width="76" height="76" alt="GRINBOOK">
+          <p class="eyebrow" data-t="about"></p>
+          <h2 class="title" id="about-title" data-t="aboutTitle"></h2>
+          <p data-t="aboutP1"></p>
+          <p data-t="aboutP2"></p>
+          <h3 data-t="glance"></h3>
+          <dl class="facts" id="facts"></dl>
+          <h3 data-t="tryTitle"></h3>
+          <p data-th="tryP"></p>
+          <div class="close-row">
+            <a class="btn btn-ghost" href="#home" data-go="main">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-t="close"></span>
+            </a>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- MAIN -->
+    <section class="view main" data-view="main" aria-label="GRINBOOK">
+      <canvas class="wind" id="wind" aria-hidden="true"></canvas>
+      <img class="photo" src="assets/bazaar-blur.webp" srcset="assets/bazaar-blur-small.webp 900w, assets/bazaar-blur.webp 1672w" sizes="100vw" alt="">
+      <nav class="nav gutter">
+        <div class="lang">
+          <button class="lang-btn" type="button" id="lang-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span id="lang-label"></span>
+          </button>
+          <ul class="lang-menu" id="lang-menu" role="menu" hidden></ul>
+        </div>
+        <a class="wordmark" href="#home" data-go="main" id="wordmark" aria-label="GRINBOOK"></a>
+        <a class="about-link" href="#about" data-go="about" data-t="about"></a>
+      </nav>
+      <div class="stage gutter">
+        <div class="bot"><img src="assets/grin-bot.webp" width="900" height="890" alt="GRIN"></div>
+        <p class="tagline" data-th="tagline"></p>
+        <div class="cta">
+          <a class="btn btn-ghost" href="#how" data-go="how" data-t="how"></a>
+          <a class="btn btn-solid" href="#demo" data-go="demo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.9 4.6 18.7 19.7c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9-8.2c.4-.4-.1-.6-.6-.2L6.3 13.3l-4.8-1.5c-1-.3-1-1 .2-1.5l18.8-7.2c.9-.3 1.6.2 1.4 1.5z"/></svg>
+            <span data-t="demo"></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW: two-tab showcase -->
+    <section class="view" data-view="how" aria-labelledby="slide-title">
+      <div class="shine" aria-hidden="true"><span class="sparkle" style="right:-140px;top:10%"></span><span class="sparkle" style="left:-160px;bottom:-120px;animation-delay:-8s"></span></div>
+      <div class="scroll"><div class="scroll-inner gutter showcase">
+        <div class="show-top"><a class="topback" href="#home" data-go="main">↑ <span data-t="back"></span></a><span class="brand" data-brand></span></div>
+
+        <div class="tabs" role="tablist" aria-label="GRIN">
+          <button class="tab" role="tab" type="button" data-tab="bill" aria-selected="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 2h12a1 1 0 0 1 1 1v18l-3-2-2 2-2-2-2 2-2-2-3 2V3a1 1 0 0 1 1-1zm2 5v2h8V7H8zm0 4v2h8v-2H8zm0 4v2h5v-2H8z"/></svg>
+            <span data-t="tab1"></span>
+          </button>
+          <button class="tab" role="tab" type="button" data-tab="ask" aria-selected="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.5 3 2 6.6 2 11c0 2.4 1.3 4.5 3.4 6L4.5 21l4.4-2.3c1 .2 2 .3 3.1.3 5.5 0 10-3.6 10-8s-4.5-8-10-8zm-1 12v-2h2v2h-2zm2.6-5.4c-.6.6-1.1.9-1.1 1.9h-1.9c0-1.6.8-2.3 1.4-2.8.5-.4.8-.6.8-1.2 0-.6-.5-1.1-1.3-1.1-.8 0-1.3.5-1.4 1.2H8.3c.1-1.8 1.6-3 3.4-3 1.9 0 3.3 1.1 3.3 2.8 0 1-.6 1.6-1.4 2.2z"/></svg>
+            <span data-t="tab2"></span>
+          </button>
+        </div>
+
+        <h2 class="big fade" id="slide-title"></h2>
+        <p class="big-sub fade" id="slide-sub"></p>
+
+        <div class="device-row">
+          <div class="laptop" role="img" aria-label="Telegram">
+            <div class="lid">
+              <div class="tgd">
+                <aside class="side" aria-hidden="true">
+                  <div class="side-top"><span class="dots3"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span><span class="search" id="search"></span></div>
+                  <ul class="chats" id="chats"></ul>
+                </aside>
+                <div class="pane">
+                  <div class="tg-head">
+                    <span class="tg-group">С</span>
+                    <div class="tg-title"><b>Ситрус Савдо</b><span class="tg-sub" id="tg-sub"></span></div>
+                    <span class="head-icons" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></span>
+                  </div>
+                  <div class="tg-chat" id="chat"></div>
+                  <div class="toast" id="toast"></div>
+                  <div class="caption-live" id="caption" aria-hidden="true"><div class="cloud"><i class="bump b1"></i><i class="bump b2"></i><i class="bump b3"></i><i class="bump b4"></i><i class="bump b5"></i><span id="caption-text"></span></div><i class="trail t1"></i><i class="trail t2"></i></div>
+                  <div class="tg-input">
+                    <svg viewBox="0 0 24 24"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6l8.3-8.3"/></svg>
+                    <span class="field" id="field"></span>
+                    <span class="rec" id="rec"><i></i><b id="rec-time">0:00</b><span id="rec-label"></span></span>
+                    <span class="mic" id="mic"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="base"></div>
+          </div>
+          <div class="pager">
+            <div class="dots" id="dots" role="group"></div>
+            <button class="playbtn" type="button" id="playbtn"></button>
+          </div>
+        </div>
+
+        <div class="show-cta">
+          <a class="btn btn-ghost" href="#home" data-go="main">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span data-t="back"></span>
+          </a>
+          <a class="btn btn-solid" href="#demo" data-go="demo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.9 4.6 18.7 19.7c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9-8.2c.4-.4-.1-.6-.6-.2L6.3 13.3l-4.8-1.5c-1-.3-1-1 .2-1.5l18.8-7.2c.9-.3 1.6.2 1.4 1.5z"/></svg>
+            <span data-t="demo"></span>
+          </a>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- DEMO (further below) -->
+    <section class="view" data-view="demo" aria-labelledby="demo-title">
+      <div class="shine" aria-hidden="true"><span class="sparkle" style="left:30%;top:-160px"></span></div>
+      <div class="scroll"><div class="scroll-inner gutter demo-inner">
+        <div class="demo-card">
+          <div>
+            <p style="margin:0 0 18px"><span class="brand" data-brand></span></p>
+            <p class="eyebrow" data-t="demoEyebrow"></p>
+            <h2 class="title" id="demo-title" data-t="demoTitle"></h2>
+            <p class="lede" data-t="demoLede"></p>
+          </div>
+          <div>
+            <ol class="demo-steps" id="demo-steps"></ol>
+            <div class="demo-actions">
+              <a class="btn btn-solid" href="https://t.me/Grin_uz_bot" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.9 4.6 18.7 19.7c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9-8.2c.4-.4-.1-.6-.6-.2L6.3 13.3l-4.8-1.5c-1-.3-1-1 .2-1.5l18.8-7.2c.9-.3 1.6.2 1.4 1.5z"/></svg>
+                <span data-t="demoOpen"></span>
+              </a>
+              <a class="btn btn-ghost" href="#home" data-go="main"><span data-t="back"></span></a>
+            </div>
+            <span class="handle">t.me/Grin_uz_bot</span>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(() => {
+/* ═════════════ Texts ═════════════ */
+const LANGS = [
+  { code: "uzc", html: "uz-Cyrl", name: "Ўзбекча" },
+  { code: "uzl", html: "uz-Latn", name: "O'zbekcha" },
+  { code: "ru", html: "ru", name: "Русский" },
+  { code: "en", html: "en", name: "English" },
+];
+
+const T = {
+  uzc: {
+    about: "Биз ҳақимизда",
+    tagline: "Савдони айтинг. <em>GRIN чекни ёзади.</em>",
+    how: "GRIN нима қилади?",
+    demo: "7 кун бепулга ишлатинг",
+    back: "Бош саҳифага",
+    tab1: "Чек ҳисоблаш",
+    tab2: "GRIN'дан сўраш",
+    bill: [["Гапиринг", "Одатдагидек овозли хабар юборинг: «Жасурга 6 та анор 172 мингдан». Ёзиш шарт эмас."], ["Ҳисоблайди", "GRIN нима эшитганини кўрсатади ва чекни сўмигача аниқ ҳисоблайди."], ["Сақлайди", "✅ ни босинг: савдо ва мижознинг қарзи дафтарга ёзилади."]],
+    ask: [["Сўранг", "Овоз билан сўранг: «Акмал акага охирги савдомиз қанча бўлганди?»"], ["Топади", "GRIN барча чек ва тўловлардан топиб, бир зумда жавоб беради."], ["Қарзни билади", "«Акмал аканинг қанча қарзи бор?» Жами қарз ва охирги тўловни кўрсатади."]],
+    play: "Ижро", pause: "Тўхтатиш", slide: "Слайд",
+    aboutTitle: "Telegram гуруҳингизда ишлайдиган ҳисобчи",
+    aboutP1: "GRINBOOK Ўзбекистон бозорларидаги улгуржи савдогарлар учун яратилган. Бозорда савдо тез ва овоз билан бўлади, қарзлар эса кўпинча хотирада ёки дафтарда қолади. GRINBOOK'нинг боти GRIN гуруҳни тинглайди, ҳар бир савдони аниқ чекка айлантиради ва ҳар бир мижознинг қарзини юритади.",
+    aboutP2: "Сунъий интеллект фақат айтилган гапни ўқийди. Ҳисоб-китобни, тарадан тортиб охирги сўмгача, GRINBOOK'нинг ўз дастури қилади, шунинг учун натижа ҳар доим аниқ. Агар бирор сўз нотўғри эшитилса, уни чекда кўрасиз ва жавоб ёзиб тузатасиз.",
+    glance: "Қисқача",
+    facts: [["Қаерда ишлайди", "Ўзингизнинг Telegram гуруҳингизда. Ҳеч нарса ўрнатиш керак эмас."], ["Нимани тушунади", "Овоз ва матн, ўзбек ва рус тилида, «каробка», «тара», «нетто», «мингдан» каби бозор сўзлари."], ["Нимани ҳисоблайди", "Каробка, кило, тара, кило ёки каробка нархи, келишилган нарх, тўловлар."], ["Нимага жавоб беради", "Мижознинг қарзи, охирги савдо, бугунги ҳисоб, қарздорлар рўйхати."], ["Нимани сақлайди", "Ҳар бир чек сана ва вақти билан, ҳар бир мижознинг қарзи, ким нимани ўзгартиргани."], ["Қачон жим туради", "Саломлашиш ва оддий гапларда. Фақат савдо бўлганда гапиради."]],
+    tryTitle: "Синаб кўринг",
+    tryP: "Дастлабки 7 кун бепулга ишлатинг. Telegram'да <b>@Grin_uz_bot</b> ни очинг ва уни дўконингиз гуруҳига қўшинг.",
+    close: "Ёпиш",
+    demoEyebrow: "7 кун бепул",
+    demoTitle: "GRINBOOK'ни ўз дўконингизда 7 кун бепулга ишлатинг",
+    demoLede: "Карта керак эмас. Жамоангиз ўша Telegram гуруҳида ишлашда давом этади, сиз эса биринчи кундан ҳар бир чек ва қарзни кўрасиз.",
+    demoSteps: ["Telegram'да <b>@Grin_uz_bot</b> ни очинг.", "Уни дўконингиз гуруҳига қўшинг ва <b>админ</b> қилинг.", "Гуруҳда <code>/start</code> юборинг. Кейин шунчаки гаплашинг."],
+    demoOpen: "GRIN'ни Telegram'да очиш",
+  },
+  uzl: {
+    about: "Biz haqimizda",
+    tagline: "Savdoni ayting. <em>GRIN chekni yozadi.</em>",
+    how: "GRIN nima qiladi?",
+    demo: "7 kun bepulga ishlating",
+    back: "Bosh sahifaga",
+    tab1: "Chek hisoblash",
+    tab2: "GRIN'dan so'rash",
+    bill: [["Gapiring", "Odatdagidek ovozli xabar yuboring: «Jasurga 6 ta anor 172 mingdan». Yozish shart emas."], ["Hisoblaydi", "GRIN nima eshitganini ko'rsatadi va chekni so'migacha aniq hisoblaydi."], ["Saqlaydi", "✅ ni bosing: savdo va mijozning qarzi daftarga yoziladi."]],
+    ask: [["So'rang", "Ovoz bilan so'rang: «Akmal akaga oxirgi savdomiz qancha bo'lgandi?»"], ["Topadi", "GRIN barcha chek va to'lovlardan topib, bir zumda javob beradi."], ["Qarzni biladi", "«Akmal akaning qancha qarzi bor?» Jami qarz va oxirgi to'lovni ko'rsatadi."]],
+    play: "Ijro", pause: "To'xtatish", slide: "Slayd",
+    aboutTitle: "Telegram guruhingizda ishlaydigan hisobchi",
+    aboutP1: "GRINBOOK O'zbekiston bozorlaridagi ulgurji savdogarlar uchun yaratilgan. Bozorda savdo tez va ovoz bilan bo'ladi, qarzlar esa ko'pincha xotirada yoki daftarda qoladi. GRINBOOK'ning boti GRIN guruhni tinglaydi, har bir savdoni aniq chekka aylantiradi va har bir mijozning qarzini yuritadi.",
+    aboutP2: "Sun'iy intellekt faqat aytilgan gapni o'qiydi. Hisob-kitobni, taradan tortib oxirgi so'mgacha, GRINBOOK'ning o'z dasturi qiladi, shuning uchun natija har doim aniq. Agar biror so'z noto'g'ri eshitilsa, uni chekda ko'rasiz va javob yozib tuzatasiz.",
+    glance: "Qisqacha",
+    facts: [["Qayerda ishlaydi", "O'zingizning Telegram guruhingizda. Hech narsa o'rnatish kerak emas."], ["Nimani tushunadi", "Ovoz va matn, o'zbek va rus tilida, «karobka», «tara», «netto», «mingdan» kabi bozor so'zlari."], ["Nimani hisoblaydi", "Karobka, kilo, tara, kilo yoki karobka narxi, kelishilgan narx, to'lovlar."], ["Nimaga javob beradi", "Mijozning qarzi, oxirgi savdo, bugungi hisob, qarzdorlar ro'yxati."], ["Nimani saqlaydi", "Har bir chek sana va vaqti bilan, har bir mijozning qarzi, kim nimani o'zgartirgani."], ["Qachon jim turadi", "Salomlashish va oddiy gaplarda. Faqat savdo bo'lganda gapiradi."]],
+    tryTitle: "Sinab ko'ring",
+    tryP: "Dastlabki 7 kun bepulga ishlating. Telegram'da <b>@Grin_uz_bot</b> ni oching va uni do'koningiz guruhiga qo'shing.",
+    close: "Yopish",
+    demoEyebrow: "7 kun bepul",
+    demoTitle: "GRINBOOK'ni o'z do'koningizda 7 kun bepulga ishlating",
+    demoLede: "Karta kerak emas. Jamoangiz o'sha Telegram guruhida ishlashda davom etadi, siz esa birinchi kundan har bir chek va qarzni ko'rasiz.",
+    demoSteps: ["Telegram'da <b>@Grin_uz_bot</b> ni oching.", "Uni do'koningiz guruhiga qo'shing va <b>admin</b> qiling.", "Guruhda <code>/start</code> yuboring. Keyin shunchaki gaplashing."],
+    demoOpen: "GRIN'ni Telegram'da ochish",
+  },
+  ru: {
+    about: "О нас",
+    tagline: "Скажите сделку. <em>GRIN выпишет чек.</em>",
+    how: "Что делает GRIN?",
+    demo: "7 дней бесплатно",
+    back: "На главную",
+    tab1: "Расчёт чека",
+    tab2: "Вопросы к GRIN",
+    bill: [["Говорите", "Отправьте голосовое как обычно: «Жасуру 6 ящиков граната по 172 тысячи». Печатать не нужно."], ["Считает", "GRIN показывает, что услышал, и считает чек точно до сума."], ["Сохраняет", "Нажмите ✅, и сделка вместе с долгом клиента записана."]],
+    ask: [["Спросите", "Спросите голосом: «Какая была последняя продажа Акмалу?»"], ["Находит", "GRIN находит ответ во всех чеках и оплатах за секунды."], ["Знает долги", "«Сколько сейчас должен Акмал ака?» Покажет общий долг и последнюю оплату."]],
+    play: "Воспроизвести", pause: "Пауза", slide: "Слайд",
+    aboutTitle: "Бухгалтер, который живёт в вашей Telegram-группе",
+    aboutP1: "GRINBOOK создан для оптовых торговцев на базарах Узбекистана. Сделки там быстрые и голосом, а долги часто держат в памяти или в тетради. Его бот GRIN слушает группу, превращает каждую сделку в понятный чек и ведёт долг каждого клиента.",
+    aboutP2: "ИИ только читает сказанное. Все расчёты, от тары до последнего сума, делает собственная программа GRINBOOK, поэтому итог всегда точный. Если слово расслышано неверно, вы увидите это в чеке и исправите ответом.",
+    glance: "Коротко",
+    facts: [["Где работает", "В вашей Telegram-группе. Ничего устанавливать не нужно."], ["Что понимает", "Голос и текст на узбекском и русском, базарные слова: «каробка», «тара», «нетто», «мингдан»."], ["Что считает", "Коробки, килограммы, тару, цену за кило или за коробку, договорную цену, оплаты."], ["На что отвечает", "Долг клиента, последняя продажа, итог за сегодня, список должников."], ["Что хранит", "Каждый чек с датой и временем, долг каждого клиента и кто что изменил."], ["Когда молчит", "На приветствиях и обычных разговорах. Говорит только о сделках."]],
+    tryTitle: "Попробуйте",
+    tryP: "Первые 7 дней бесплатно. Откройте <b>@Grin_uz_bot</b> в Telegram и добавьте его в группу магазина.",
+    close: "Закрыть",
+    demoEyebrow: "7 дней бесплатно",
+    demoTitle: "Пользуйтесь GRINBOOK в своём магазине 7 дней бесплатно",
+    demoLede: "Карта не нужна. Команда продолжает работать в той же Telegram-группе, а вы с первого дня видите каждый чек и долг.",
+    demoSteps: ["Откройте <b>@Grin_uz_bot</b> в Telegram.", "Добавьте его в группу магазина и сделайте <b>админом</b>.", "Отправьте <code>/start</code> в группе. Дальше просто говорите."],
+    demoOpen: "Открыть GRIN в Telegram",
+  },
+  en: {
+    about: "About",
+    tagline: "Say the deal. <em>GRIN writes the bill.</em>",
+    how: "What does GRIN do?",
+    demo: "Use it free for 7 days",
+    back: "Back to main page",
+    tab1: "Calculate the bill",
+    tab2: "Ask GRIN",
+    bill: [["Speak", "Send a voice note the way you always do: «Jasurga 6 ta anor 172 mingdan». No typing."], ["It counts", "GRIN shows what it heard and works out the bill exactly, to the so'm."], ["It saves", "Press ✅ and the trade and the customer's debt go into the books."]],
+    ask: [["Ask", "Ask by voice: «Akmal akaga oxirgi savdomiz qancha bo'lgandi?» (our last sale to Akmal aka?)"], ["It finds", "GRIN finds the answer in every bill and payment, in seconds."], ["It knows debts", "«Akmal akaning qancha qarzi bor?» It shows the total debt and the last payment."]],
+    play: "Play", pause: "Pause", slide: "Slide",
+    aboutTitle: "A bookkeeper that lives in your Telegram group",
+    aboutP1: "GRINBOOK is built for wholesale traders at Uzbek bazaars, where deals happen fast and by voice, and debts are kept in memory or in a notebook. Its bot, GRIN, listens to the group, turns each deal into a clear bill and keeps every customer's balance.",
+    aboutP2: "The AI only reads what was said. The arithmetic, from tare to the last so'm, is done by GRINBOOK's own code, so the result is always exact. If a word is misheard, you see it on the bill and fix it with a reply.",
+    glance: "At a glance",
+    facts: [["Works in", "Your own Telegram group. Nothing to install."], ["Understands", "Voice and text in Uzbek and Russian, and bazaar words like «karobka», «tara», «netto», «mingdan»."], ["Counts", "Boxes, kilos, tare, price per kilo or per box, bargained prices, payments."], ["Answers", "A customer's debt, the last sale, today's totals, the list of debtors."], ["Keeps", "Every bill with date and time, each customer's debt, and who changed what."], ["Stays quiet", "On greetings and everyday chat. It speaks up only for deals."]],
+    tryTitle: "Try it",
+    tryP: "The first 7 days are free. Open <b>@Grin_uz_bot</b> in Telegram and add it to your shop's group.",
+    close: "Close",
+    demoEyebrow: "7 days free",
+    demoTitle: "Use GRINBOOK in your own shop free for 7 days",
+    demoLede: "No card needed. Your team keeps working in the same Telegram group, and you see every bill and debt from day one.",
+    demoSteps: ["Open <b>@Grin_uz_bot</b> in Telegram.", "Add it to your shop's group and make it an <b>admin</b>.", "Send <code>/start</code> in the group. Then just talk."],
+    demoOpen: "Open GRIN in Telegram",
+  },
+};
+/* In Uzbek Cyrillic the brand is written ГРИН too (the Telegram handle stays Latin). */
+(function cyr(o) { for (const k in o) { if (typeof o[k] === "string") o[k] = o[k].replace(/GRINBOOK/g, "ГРИНБУК").replace(/GRIN/g, "ГРИН"); else if (o[k] && typeof o[k] === "object") cyr(o[k]); } })(T.uzc);
+
+/* What the chats say. GRIN's words follow the bot's real output. */
+const CHAT = {
+  uzc: {
+    v1: "Жасурга 6 та анор 172 мингдан", q1: "Акмал акага охирги савдомиз қанча бўлганди?", q2: "Акмал аканинг ҳозир қанча қарзи бор?", rec: "Ёзиб олинмоқда", heard: "Матн",
+    members: "5 аъзо", typing: "Grin Bot ёзмоқда", today: "Бугун", you: "Сиз", voice: "🎤 Овозли хабар", input: "Хабар", search: "Қидириш", done: "Бажарилди",
+    kb: ["✅ Тасдиқлаш", "✏️ Таҳрирлаш", "🗑 Ўчириш"],
+    active: "Grin Bot: 🧾 Сотув #12",
+    side: [["Андижон филиал", "Grin Bot: 🧾 Сотув #31 — Шерзод", "09:02", 3, "#7c6cf2"], ["Дадам", "🎤 Овозли хабар", "08:47", 0, "#3fb6a8"], ["Food City", "Эртага мандарин келади", "Кеча", 0, "#e2557a"], ["Сақланганлар", "Нархлар рўйхати", "Кеча", 0, "#4c9be8"]],
+    billDraft: "🎤 Эшитдим: «Жасурга 6 та анор 172 мингдан»\n\n📝 ҚОРАЛАМА — ҳали тасдиқланмаган\n🧾 Сотув #12 — Жасур · 24.11 09:15\nанор: 6 каробка\n6 × 172 000 = 1 032 000 сўм\nТўланди: 0\nҚарз (шу сотув): 1 032 000\nУмумий қарз: 3 482 000",
+    billDone: "🎤 Эшитдим: «Жасурга 6 та анор 172 мингдан»\n\n🧾 Сотув #12 — Жасур · 24.11 09:15\nанор: 6 каробка\n6 × 172 000 = 1 032 000 сўм\nТўланди: 0\nҚарз (шу сотув): 1 032 000\nУмумий қарз: 3 482 000",
+    a1: "🎤 Эшитдим: «Акмал акага охирги савдомиз қанча бўлганди?»\n\n🧾 Акмал ака — охирги савдо\nСотув #11 · 23.11 16:40\nбакли мандарин: 40 каробка\n40 × 165 000 = 6 600 000 сўм\nТўланди: 2 000 000\nҚарз (шу сотув): 4 600 000",
+    a2: "🎤 Эшитдим: «Акмал аканинг ҳозир қанча қарзи бор?»\n\n💰 Акмал ака — умумий қарз: 4 600 000 сўм\nОхирги савдо: #11 · 23.11 16:40 — 6 600 000\nОхирги тўлов: 23.11 16:40 — 2 000 000",
+  },
+  uzl: {
+    v1: "Jasurga 6 ta anor 172 mingdan", q1: "Akmal akaga oxirgi savdomiz qancha bo'lgandi?", q2: "Akmal akaning hozir qancha qarzi bor?", rec: "Yozib olinmoqda", heard: "Matn",
+    members: "5 a'zo", typing: "Grin Bot yozmoqda", today: "Bugun", you: "Siz", voice: "🎤 Ovozli xabar", input: "Xabar", search: "Qidirish", done: "Bajarildi",
+    kb: ["✅ Tasdiqlash", "✏️ Tahrirlash", "🗑 O'chirish"],
+    active: "Grin Bot: 🧾 Sotuv #12",
+    side: [["Andijon filial", "Grin Bot: 🧾 Sotuv #31 — Sherzod", "09:02", 3, "#7c6cf2"], ["Dadam", "🎤 Ovozli xabar", "08:47", 0, "#3fb6a8"], ["Food City", "Ertaga mandarin keladi", "Kecha", 0, "#e2557a"], ["Saqlanganlar", "Narxlar ro'yxati", "Kecha", 0, "#4c9be8"]],
+    billDraft: "🎤 Eshitdim: «Jasurga 6 ta anor 172 mingdan»\n\n📝 QORALAMA — hali tasdiqlanmagan\n🧾 Sotuv #12 — Jasur · 24.11 09:15\nanor: 6 karobka\n6 × 172 000 = 1 032 000 so'm\nTo'landi: 0\nQarz (shu sotuv): 1 032 000\nUmumiy qarz: 3 482 000",
+    billDone: "🎤 Eshitdim: «Jasurga 6 ta anor 172 mingdan»\n\n🧾 Sotuv #12 — Jasur · 24.11 09:15\nanor: 6 karobka\n6 × 172 000 = 1 032 000 so'm\nTo'landi: 0\nQarz (shu sotuv): 1 032 000\nUmumiy qarz: 3 482 000",
+    a1: "🎤 Eshitdim: «Akmal akaga oxirgi savdomiz qancha bo'lgandi?»\n\n🧾 Akmal aka — oxirgi savdo\nSotuv #11 · 23.11 16:40\nbakli mandarin: 40 karobka\n40 × 165 000 = 6 600 000 so'm\nTo'landi: 2 000 000\nQarz (shu sotuv): 4 600 000",
+    a2: "🎤 Eshitdim: «Akmal akaning hozir qancha qarzi bor?»\n\n💰 Akmal aka — umumiy qarz: 4 600 000 so'm\nOxirgi savdo: #11 · 23.11 16:40 — 6 600 000\nOxirgi to'lov: 23.11 16:40 — 2 000 000",
+  },
+  ru: {
+    v1: "Жасуру 6 ящиков граната по 172 тысячи", q1: "Какая была последняя продажа Акмалу?", q2: "Сколько сейчас должен Акмал ака?", rec: "Запись", heard: "Текст",
+    members: "5 участников", typing: "Grin Bot печатает", today: "Сегодня", you: "Вы", voice: "🎤 Голосовое сообщение", input: "Сообщение", search: "Поиск", done: "Готово",
+    kb: ["✅ Подтвердить", "✏️ Изменить", "🗑 Удалить"],
+    active: "Grin Bot: 🧾 Продажа #12",
+    side: [["Андижан филиал", "Grin Bot: 🧾 Продажа #31 — Шерзод", "09:02", 3, "#7c6cf2"], ["Папа", "🎤 Голосовое сообщение", "08:47", 0, "#3fb6a8"], ["Food City", "Завтра привезут мандарины", "Вчера", 0, "#e2557a"], ["Избранное", "Список цен", "Вчера", 0, "#4c9be8"]],
+    billDraft: "🎤 Услышал: «Жасуру 6 ящиков граната по 172 тысячи»\n\n📝 ЧЕРНОВИК — ещё не подтверждено\n🧾 Продажа #12 — Жасур · 24.11 09:15\nгранат: 6 коробок\n6 × 172 000 = 1 032 000 сум\nОплачено: 0\nДолг (эта продажа): 1 032 000\nОбщий долг: 3 482 000",
+    billDone: "🎤 Услышал: «Жасуру 6 ящиков граната по 172 тысячи»\n\n🧾 Продажа #12 — Жасур · 24.11 09:15\nгранат: 6 коробок\n6 × 172 000 = 1 032 000 сум\nОплачено: 0\nДолг (эта продажа): 1 032 000\nОбщий долг: 3 482 000",
+    a1: "🎤 Услышал: «Какая была последняя продажа Акмалу?»\n\n🧾 Акмал ака — последняя продажа\nПродажа #11 · 23.11 16:40\nмандарин: 40 коробок\n40 × 165 000 = 6 600 000 сум\nОплачено: 2 000 000\nДолг (эта продажа): 4 600 000",
+    a2: "🎤 Услышал: «Сколько сейчас должен Акмал ака?»\n\n💰 Акмал ака — общий долг: 4 600 000 сум\nПоследняя продажа: #11 · 23.11 16:40 — 6 600 000\nПоследняя оплата: 23.11 16:40 — 2 000 000",
+  },
+};
+CHAT.en = { ...CHAT.uzl, rec: "Recording", members: "5 members", typing: "Grin Bot is typing", today: "Today", you: "You", voice: "🎤 Voice message", input: "Write a message…", search: "Search",
+  side: [["Andijan branch", "Grin Bot: 🧾 Sotuv #31 — Sherzod", "09:02", 3, "#7c6cf2"], ["Dad", "🎤 Voice message", "08:47", 0, "#3fb6a8"], ["Food City", "Mandarins arrive tomorrow", "Yesterday", 0, "#e2557a"], ["Saved Messages", "Price list", "Yesterday", 0, "#4c9be8"]] };
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let lang = "uzc";
+try { const saved = localStorage.getItem("grin-lang"); if (saved && T[saved]) lang = saved; } catch {}
+const $ = (id) => document.getElementById(id);
+
+/* ═════════════ Screens ═════════════ */
+const ORDER = { about: -1, main: 0, how: 1, demo: 2 };
+const track = $("track");
+const appEl = document.querySelector(".app");
+// The screens move only by the track; never let focus or "scroll into view" shift the stack itself.
+appEl.addEventListener("scroll", () => { appEl.scrollTop = 0; appEl.scrollLeft = 0; });
+track.addEventListener("scroll", () => { track.scrollTop = 0; track.scrollLeft = 0; });
+const views = [...document.querySelectorAll(".view")];
+let current = "main";
+
+function go(name, instant) {
+  if (!(name in ORDER)) name = "main";
+  const was = current;
+  current = name;
+  if (instant) track.style.transition = "none";
+  track.style.transform = `translateY(${-ORDER[name] * 100}%)`;
+  if (instant) { track.getBoundingClientRect(); track.style.transition = ""; }
+  views.forEach((v) => { const on = v.dataset.view === name; v.inert = !on; v.setAttribute("aria-hidden", String(!on)); });
+  appEl.scrollTop = 0; track.scrollTop = 0;
+  if (name === "how" && was !== "how") show.start(instant ? 0 : 900);
+  if (name !== "how") show.stop();
+}
+const fromHash = () => ({ "#about": "about", "#how": "how", "#demo": "demo" })[location.hash] || "main";
+addEventListener("hashchange", () => go(fromHash()));
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("[data-go]"); if (!a) return;
+  e.preventDefault();
+  const name = a.dataset.go;
+  const target = views.find((v) => v.dataset.view === name)?.querySelector(".scroll");
+  if (target) target.scrollTop = 0;
+  try { history.replaceState(null, "", name === "main" ? "#home" : "#" + name); } catch {}
+  go(name);
+});
+
+/* ═════════════ Showcase ═════════════ */
+const TICKS = '<svg width="16" height="10" viewBox="0 0 16 10"><path d="M1 5l3 3 6-7M6 8l1 1 7-8" stroke="#6ab3f3" stroke-width="1.6" fill="none"/></svg>';
+const WAVE = [6, 11, 16, 9, 20, 14, 24, 12, 18, 8, 22, 15, 10, 19, 13, 7, 17, 11, 21, 9, 14, 6];
+const ICON_PLAY = '<svg viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 16 16"><path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg>';
+const esc = (s) => s.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+
+const show = (() => {
+  const chat = $("chat"), sub = $("tg-sub"), toast = $("toast"), field = $("field"), caption = $("caption"), inputBar = document.querySelector(".tg-input");
+  const title = $("slide-title"), desc = $("slide-sub"), dots = $("dots"), playBtn = $("playbtn");
+  const tabs = [...document.querySelectorAll(".tab")];
+  let tab = "bill", slide = 0, playing = !reduce, timers = [], advance = null, c = CHAT[lang], billMsg = null;
+
+  const later = (ms, fn, instant) => (instant ? fn() : timers.push(setTimeout(fn, ms)));
+  function typing(on) { sub.textContent = on ? c.typing : c.members; sub.classList.toggle("typing", on); }
+  function add(html, cls, instant) {
+    const el = document.createElement("div");
+    el.className = "msg " + cls + (instant ? "" : " enter");
+    el.innerHTML = html;
+    chat.appendChild(el);
+    if (!instant) requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove("enter")));
+    return el;
+  }
+  /** Records (live caption + timer), then sends the voice bubble with its transcript. Returns how long recording takes. */
+  function voice(len, time, instant, words) {
+    const send = (inst) => {
+      const el = add(`<div class="col"><div class="bubble"><div class="voice"><span class="play"></span><div class="wave">${WAVE.map((h) => `<i style="height:${h}px"></i>`).join("")}</div><span class="vlen">${len}</span></div><span class="meta">${time} ${TICKS}</span></div></div>`, "out", inst);
+      el.querySelectorAll(".wave i").forEach((b, i) => (inst ? b.classList.add("lit") : timers.push(setTimeout(() => b.classList.add("lit"), 300 + i * 60))));
+    };
+    if (instant) { send(true); return 0; }
+    const list = words.split(" ");
+    const step = 330, recMs = 500 + list.length * step + 700;
+    inputBar.classList.add("recording");
+    $("rec-label").textContent = c.rec;
+    $("caption-text").innerHTML = list.map((w) => `<span class="w">${esc(w)}</span>`).join(" ");
+    caption.classList.remove("away"); caption.classList.add("on");
+    let secs = 0; $("rec-time").textContent = "0:00";
+    const tick = setInterval(() => { secs++; $("rec-time").textContent = "0:0" + Math.min(secs, 9); }, 1000);
+    timers.push(tick);
+    caption.querySelectorAll(".w").forEach((w, i) => timers.push(setTimeout(() => w.classList.add("on"), 500 + i * step)));
+    timers.push(setTimeout(() => { clearInterval(tick); inputBar.classList.remove("recording"); caption.classList.replace("on", "away"); send(false); }, recMs));
+    return recMs;
+  }
+  function bot(text, time, kb, instant) {
+    return add(`<span class="ava"></span><div class="col"><div class="bubble"><div class="who">Grin Bot</div><div class="quote"><b>${c.you}</b><span>${c.voice}</span></div><div class="bill">${esc(text)}</div><span class="meta">${time}</span></div>${kb ? `<div class="kb">${c.kb.map((k) => `<span>${k}</span>`).join("")}</div>` : ""}</div>`, "in", instant);
+  }
+
+  /* Each tab is three slides; each slide is a few timed steps in the chat. */
+  const SCRIPT = {
+    bill: [
+      { dur: 6400, run: (i) => voice("0:06", "09:15", i, c.v1) },
+      { dur: 5200, run: (i) => { later(0, () => typing(true), i); later(1500, () => { typing(false); billMsg = bot(c.billDraft, "09:15", true, i); }, i); } },
+      { dur: 4600, run: (i) => {
+        later(900, () => billMsg.querySelector(".kb span")?.classList.add("press"), i);
+        later(1400, () => { billMsg.querySelector(".kb")?.remove(); billMsg.querySelector(".bill").textContent = c.billDone; if (!i) { toast.textContent = c.done; toast.classList.add("show"); } }, i);
+        later(2900, () => toast.classList.remove("show"), i);
+      } },
+    ],
+    ask: [
+      { dur: 7000, run: (i) => voice("0:04", "17:02", i, c.q1) },
+      { dur: 5000, run: (i) => { later(0, () => typing(true), i); later(1400, () => { typing(false); bot(c.a1, "17:02", false, i); }, i); } },
+      { dur: 9800, run: (i) => { const r = voice("0:03", "17:03", i, c.q2); later(r + 1300, () => typing(true), i); later(r + 2600, () => { typing(false); bot(c.a2, "17:03", false, i); }, i); } },
+    ],
+  };
+
+  function renderText(animate) {
+    const [h, p] = T[lang][tab][slide];
+    const apply = () => { title.textContent = h; desc.textContent = p; title.classList.remove("out"); desc.classList.remove("out"); };
+    if (animate && !reduce) { title.classList.add("out"); desc.classList.add("out"); setTimeout(apply, 260); } else apply();
+    dots.innerHTML = SCRIPT[tab].map((_, i) => `<button class="dot" type="button" data-i="${i}" aria-label="${T[lang].slide} ${i + 1}" ${i === slide ? 'aria-current="true"' : ""}></button>`).join("");
+    tabs.forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+    playBtn.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
+    playBtn.setAttribute("aria-label", playing ? T[lang].pause : T[lang].play);
+  }
+
+  function go(t, s, { animate = true } = {}) {
+    timers.forEach((t) => { clearTimeout(t); clearInterval(t); }); timers = []; clearTimeout(advance);
+    inputBar.classList.remove("recording"); caption.classList.remove("on", "away");
+    const textChanged = t !== tab || s !== slide;
+    tab = t; slide = s; c = CHAT[lang]; billMsg = null;
+    chat.innerHTML = `<span class="day">${c.today}</span>`;
+    toast.classList.remove("show"); typing(false); field.textContent = c.input;
+    SCRIPT[tab].slice(0, slide).forEach((step) => step.run(true));       // what already happened
+    const instant = !animate || reduce;
+    SCRIPT[tab][slide].run(instant);                                       // this slide, animated
+    if (instant) typing(false);
+    renderText(animate && textChanged);
+    if (playing && !reduce && current === "how") advance = setTimeout(next, SCRIPT[tab][slide].dur + 1400);
+  }
+  function next() {
+    if (slide + 1 < SCRIPT[tab].length) go(tab, slide + 1);
+    else go(tab === "bill" ? "ask" : "bill", 0);
+  }
+
+  tabs.forEach((b) => b.addEventListener("click", () => go(b.dataset.tab, 0)));
+  dots.addEventListener("click", (e) => { const d = e.target.closest(".dot"); if (d) go(tab, Number(d.dataset.i)); });
+  playBtn.addEventListener("click", () => {
+    playing = !playing;
+    clearTimeout(advance);
+    if (playing) next(); else renderText(false);
+  });
+
+  function renderSide() {
+    $("search").textContent = c.search;
+    const items = [["Ситрус Савдо", c.active, "09:15", 0, "linear-gradient(135deg,#ffb661,#f37b39)", true], ...c.side];
+    $("chats").innerHTML = items.map(([name, prev, time, unread, bg, active]) =>
+      `<li class="chat-item${active ? " active" : ""}"><span class="ci-ava" style="background:${bg}">${name[0]}</span><span style="min-width:0"><div class="ci-name">${name}</div><div class="ci-prev">${prev}</div></span><span class="ci-meta"><span>${time}</span>${unread ? `<span class="badge">${unread}</span>` : ""}</span></li>`).join("");
+  }
+
+  return {
+    setLang() { c = CHAT[lang]; renderSide(); go(tab, slide, { animate: false }); },
+    start(delay) { timers.forEach(clearTimeout); clearTimeout(advance); playing = !reduce; c = CHAT[lang]; tab = "bill"; slide = 0; chat.innerHTML = `<span class="day">${c.today}</span>`; renderText(false); advance = setTimeout(() => go("bill", 0, { animate: true }), delay); },
+    stop() { timers.forEach((t) => { clearTimeout(t); clearInterval(t); }); timers = []; clearTimeout(advance); inputBar.classList.remove("recording"); caption.classList.remove("on", "away"); },
+    init() { renderSide(); go("bill", 2, { animate: false }); playing = !reduce; renderText(false); },
+  };
+})();
+
+/* ═════════════ Language ═════════════ */
+const langBtn = $("lang-btn"), langMenu = $("lang-menu");
+langMenu.innerHTML = LANGS.map((l) => `<li role="none"><button type="button" role="menuitemradio" data-lang="${l.code}">${l.name}</button></li>`).join("");
+function closeMenu() { langMenu.hidden = true; langBtn.setAttribute("aria-expanded", "false"); }
+langBtn.addEventListener("click", () => { const open = langMenu.hidden; langMenu.hidden = !open; langBtn.setAttribute("aria-expanded", String(open)); });
+langMenu.addEventListener("click", (e) => { const b = e.target.closest("[data-lang]"); if (!b) return; setLang(b.dataset.lang); closeMenu(); langBtn.focus(); });
+document.addEventListener("click", (e) => { if (!e.target.closest(".lang")) closeMenu(); });
+addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (!langMenu.hidden) { closeMenu(); langBtn.focus(); return; }
+  if (current !== "main") { try { history.replaceState(null, "", "#home"); } catch {} go("main"); }
+});
+
+function setLang(code) {
+  lang = code;
+  try { localStorage.setItem("grin-lang", code); } catch {}
+  const t = T[code], meta = LANGS.find((l) => l.code === code);
+  document.documentElement.lang = meta.html;
+  $("lang-label").textContent = meta.name;
+  const name = code === "uzc" ? "ГРИН<span>БУК</span>" : "GRIN<span>BOOK</span>";
+  const mark = `<img src="assets/grinbook-logo.webp" width="64" height="64" alt=""><b>${name}</b>`;
+  $("wordmark").innerHTML = mark;
+  document.querySelectorAll("[data-brand]").forEach((el) => { el.innerHTML = mark; });
+  document.title = code === "uzc" ? "ГРИНБУК" : "GRINBOOK";
+  langMenu.querySelectorAll("[data-lang]").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.lang === code)));
+  document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t[el.dataset.t]; });
+  document.querySelectorAll("[data-th]").forEach((el) => { el.innerHTML = t[el.dataset.th]; });
+  $("facts").innerHTML = t.facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+  $("demo-steps").innerHTML = t.demoSteps.map((s) => `<li><span>${s}</span></li>`).join("");
+  show.setLang();
+}
+
+/* ═════════════ Wind ═════════════
+   Soft specks of light and dust drift across the blurred bazaar in slow gusts. */
+(() => {
+  const cv = $("wind"); if (reduce || !cv.getContext) return;
+  const ctx = cv.getContext("2d");
+  let w = 0, h = 0, dpr = 1, specks = [], t0 = performance.now();
+  function size() {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    w = cv.clientWidth; h = cv.clientHeight;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(Math.min(70, (w * h) / 22000));
+    specks = Array.from({ length: n }, () => spawn(true));
+  }
+  function spawn(anywhere) {
+    const r = Math.random();
+    return {
+      x: anywhere ? Math.random() * w : -40, y: Math.random() * h,
+      size: r < 0.75 ? 1.2 + Math.random() * 2.2 : 6 + Math.random() * 16,   // dust, and a few soft bokeh lights
+      speed: 14 + Math.random() * 30, drift: Math.random() * Math.PI * 2,
+      alpha: r < 0.75 ? 0.35 + Math.random() * 0.4 : 0.08 + Math.random() * 0.12,
+      warm: Math.random() < 0.6,
+    };
+  }
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (current !== "main" || document.hidden) return;
+    const dt = Math.min(0.05, (now - t0) / 1000); t0 = now;
+    const gust = 1 + 1.6 * Math.max(0, Math.sin(now / 4200)) ** 3;       // every few seconds the wind picks up
+    ctx.clearRect(0, 0, w, h);
+    for (const p of specks) {
+      p.x += p.speed * gust * dt;
+      p.y += Math.sin(now / 1300 + p.drift) * 6 * dt - 2 * dt;
+      if (p.x > w + 40 || p.y < -40) Object.assign(p, spawn(false));
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+      const col = p.warm ? "255, 236, 190" : "220, 255, 225";
+      g.addColorStop(0, `rgba(${col}, ${p.alpha})`); g.addColorStop(1, `rgba(${col}, 0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  addEventListener("resize", size); size(); requestAnimationFrame(frame);
+})();
+
+show.init();
+setLang(lang);
+go(fromHash(), true);
+})();
+</script>
+</body>
+</html>
